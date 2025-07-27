@@ -10,7 +10,21 @@ DEFAULT_MEMORY_LIMIT = 256
 
 def get_verdict(user_code_file, input_path, expected_output_path, time_limit, memory_limit_mb):
     if not os.path.exists(user_code_file):
-        return "Compilation Error", 0, 0 
+        return f"Judge Error: File '{user_code_file}' not found.", 0, 0
+    if not os.path.exists(input_path):
+        return f"Judge Error: Input file '{input_path}' not found.", 0, 0
+    if not os.path.exists(expected_output_path):
+        return f"Judge Error: Expected output file '{expected_output_path}' not found.", 0, 0
+    if not user_code_file.endswith('.py'):
+        return f"Judge Error: Unsupported file type '{user_code_file}'. Only Python files are allowed.", 0, 0
+    if not (isinstance(time_limit, (int, float)) and time_limit > 0):
+        return "Judge Error: Invalid time limit. It must be a positive number.", 0, 0
+    if not (isinstance(memory_limit_mb, (int, float)) and memory_limit_mb > 0):
+        return "Judge Error: Invalid memory limit. It must be a positive number.", 0, 0
+    if not input_path.endswith('.txt'):
+        return f"Judge Error: Unsupported input file type '{input_path}'. Only .txt or .in files are allowed.", 0, 0
+    if not expected_output_path.endswith('.txt'):
+        return f"Judge Error: Unsupported expected output file type '{expected_output_path}'. Only .txt or .out files are allowed.", 0, 0
 
     with open(input_path, 'r') as f:
         input_data = f.read()
